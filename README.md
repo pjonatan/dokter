@@ -4,3 +4,5 @@ Java Patient Database
 Program database Pasien.
 
 Database = datapas dalam sqlite.
+
+Must include sqlite-jdbc-3.15.1.jar in external library
