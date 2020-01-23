@@ -1,21 +1,13 @@
 package sandbox;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-
+import java.awt.event.*;
+import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-public class Abjad extends JFrame {
+public class Cari extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTable jtb;
@@ -26,7 +18,7 @@ public class Abjad extends JFrame {
 	Hapus h;
 	Lihat l;
 	
-	Abjad(String r)
+	Cari(String r)
 	{
 		super("Daftar pasien");
 		setBounds(2,10,1310,900);
@@ -51,35 +43,32 @@ public class Abjad extends JFrame {
 	  	  try{
 	  		Connection con=DB.getConnection();
 	  		Statement st = con.createStatement();
-	  		ResultSet res = st.executeQuery("SELECT COUNT(*) FROM pasien");
 	  		int rows=0;
+	  		ResultSet res = st.executeQuery("SELECT COUNT(*) FROM pasien where nama like '%" + r + "%'");
             while (res.next()){
                 rows = res.getInt(1);
             }
-	  		String command = "select * from pasien";
+	  		String command = "select * from pasien where nama like '%" + r + "%'";
 	  		ResultSet rs = st.executeQuery(command);
-	  		
+
 	  		data=new String[rows][7];
 	  		int count=0;
 	  		while(rs.next()){
-    			if(rs.getString(3).substring(0, 1).toLowerCase().equals(r.toLowerCase())){
-    		  		for(int i=0;i<=3;i++){
-    		  			data[count][i]=rs.getString(i + 1);
-    		  		}
-    		  		if(Integer.parseInt(rs.getString(5))==1)
-    		  		{	data[count][4] = "Wanita";}else{
-    		  			data[count][4] = "Laki2";
-    		 		}
-    		  		for(int i=5;i<=6;i++){
-    		  			data[count][i]=rs.getString(i + 1);
-    		  		}
-    				count++;
-    			}	
+	  		  		for(int i=0;i<=3;i++){
+	  		  			data[count][i]=rs.getString(i + 1);
+	  		  		}
+	  		  		if(Integer.parseInt(rs.getString(5))==1)
+	  		  		{	data[count][4] = "Wanita";}else{
+	  		  			data[count][4] = "Laki2";
+	  		 		}
+	  		  		for(int i=5;i<=6;i++){
+	  		  			data[count][i]=rs.getString(i + 1);
+	  		  		}
+	  				count++;
 	  		}
 	  		con.close();
 	  	  }catch(Exception e){System.out.println(e);}
 	  	  jtb = new JTable(data,column){
-
 			private static final long serialVersionUID = 1L;
 
 			public boolean editCellAt(int row, int column, java.util.EventObject e) {
@@ -87,7 +76,7 @@ public class Abjad extends JFrame {
 	  		 }    
 	  	  };
 	  	  jtb.addMouseListener(new PT());
-	      JTableHeader header = jtb.getTableHeader();
+	  	  JTableHeader header = jtb.getTableHeader();
 	      header.setForeground(Color.blue);
 	  	  TableColumnModel col = jtb.getColumnModel();	
 	  	  col.getColumn(0).setMaxWidth(60);
